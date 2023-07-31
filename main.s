@@ -1,8 +1,17 @@
+/*
+    equivalent to a C function prototype
+*/
 .extern printf
 
+/*
+    necessary for compilation:
+*/
 .globl main
 
 
+/*
+    global variables
+*/
 .data
 str1:
     .string "hello, world\n"
@@ -10,6 +19,9 @@ str_arg:
     .string "[%s]\n"
 
 
+/*
+    read-only section designated for program code
+*/
 .text
 main:
     pushq %rbp
@@ -24,6 +36,9 @@ main:
 
     movq $0, -8(%rbp)
     jmp loop1_test
+    /*
+        a (for) loop that prints the command-line arguments
+    */
 loop1_body:
     leaq str_arg(%rip), %rdi
     movq -8(%rbp), %rax
@@ -42,5 +57,11 @@ loop1_test:
     jl loop1_body
 
     xorq %rax, %rax
+    /*
+        LEAVE does 3 things:
+        movq %rbp, %rsp
+        popq %rbp
+        RET
+    */
     leave
 
