@@ -2,11 +2,13 @@
 
 .globl main
 
+
 .data
 str1:
     .string "hello, world\n"
 str_arg:
     .string "[%s]\n"
+
 
 .text
 main:
@@ -28,7 +30,7 @@ loop1_body:
     movq -16(%rbp), %rsi
     /*
         indexed addressing moves data located at the calculated address
-        to the destination register (dereferences a pointer);
+        to the destination operand (dereferences a pointer);
         the follow is thus equivalent to: *(argv+j)
     */
     movq (%rsi, %rax, 8), %rsi
@@ -39,6 +41,6 @@ loop1_test:
     cmpq -24(%rbp), %rax
     jl loop1_body
 
-    xor %rax, %rax
+    xorq %rax, %rax
     leave
 
