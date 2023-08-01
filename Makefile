@@ -1,15 +1,24 @@
 
-PROG_1 = main
+.PHONY: clean
 
-$(PROG_1) : \
-    $(PROG_1).o
-	gcc -o $(PROG_1) $(PROG_1).o
+NAME_EXE = min_asm
+PROG_S = asm
+PROG_C = cmain
 
-$(PROG_1).o : \
-    $(PROG_1).s
-	as -o $(PROG_1).o $(PROG_1).s
+$(NAME_EXE) : \
+    $(PROG_S).o \
+    $(PROG_C).o
+	gcc -o $(NAME_EXE) $(PROG_S).o $(PROG_C).o
+
+$(PROG_S).o : \
+    $(PROG_S).s
+	as -o $(PROG_S).o $(PROG_S).s
+
+$(PROG_C).o : \
+    $(PROG_C).c 
+	gcc -c $(PROG_C).c
 
 clean :
-	rm -f $(PROG_1)
-	rm -f $(PROG_1).o
+	rm -f *.o
+	rm -f $(NAME_EXE)
 

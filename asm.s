@@ -1,12 +1,17 @@
 /*
-    equivalent to a C function prototype
-*/
+    equivalent to a C function prototype (not needed if compiled properly;
+    linker will automatically resolve function names, a bijective operation,
+    based on the link libraries being used)
+
 .extern printf
+*/
 
 /*
-    necessary for compilation:
+    actually necessary for linker:
 */
 .globl main
+.globl reg_rflags
+.globl test_bit
 
 
 /*
@@ -56,12 +61,40 @@ loop1_test:
     cmpq -24(%rbp), %rax
     jl loop1_body
 
+    call cmain
+
     xorq %rax, %rax
     /*
-        LEAVE does 3 things:
+        LEAVE does 2 things:
         movq %rbp, %rsp
         popq %rbp
-        RET
     */
-    leave
+    leaveq
+    retq
+
+/*
+parameter types: (void)
+return type: qword
+*/
+reg_rflags:
+    pushfq
+    popq %rax
+    retq
+
+/*
+parameter types: (long qw_val, unsigned int n)
+return type: int (a bool with either 0 or 1)
+
+    registers are not stored in little-endian format as "byte" ordering
+    only exists in memory (i.e., when each cell is a byte long)--registers
+    are 64-bit dedicated circuits in x64 (no cells) that exist
+    on the CPU die itself
+*/
+test_bit:
+    movl %esi, %ecx
+    shrq %ecx, %rdi
+    andq $1, %rdi
+    movl %edi, %eax
+    retq
+
 
